@@ -16,6 +16,7 @@ object RatingsCounter {
     // Create a SparkContext using every core of the local machine, named RatingsCounter
     val sc = new SparkContext("local[*]", "RatingsCounter")
 
+    // Creating RDD
     // Load up each line of the ratings data into an RDD
     val lines = sc.textFile("./data/u.data")
 
