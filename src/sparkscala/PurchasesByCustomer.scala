@@ -12,12 +12,18 @@ object PurchasesByCustomer extends App {
     val userId = fields(0).toInt
     val productId = fields(1).toInt
     val amount = fields(2).toDouble
-    (userId, productId, amount)
+    (userId, amount)
   }
 
   val sc = new SparkContext("local[*]" ,"PurchasesByCustomer")
+
   val lines = sc.textFile("./data/customer-orders.csv")
-  val rdd = lines.map(parseLine)
-  val customerPurchases = rdd.map(x => (x._1, x._3)).reduceByKey(_ + _).collect
-  customerPurchases.foreach(println)
+
+  val mappedData = lines.map(parseLine)
+
+  val totalByCustomer = mappedData.reduceByKey((x, y) => x + y)
+
+  val totalByCustomerSorted = totalByCustomer.sortBy(_._2).collect
+
+  totalByCustomerSorted.foreach(println)
 }
