@@ -36,7 +36,7 @@ object PopularMovieNicer extends App {
   val sc = new SparkContext("local[*]", "PopularMoviesNicer")
 
   // Create a broadcast variable of our ID -> movie name map
-  var nameDict = sc.broadcast(loadMovieNames)
+  var nameDict = sc.broadcast(loadMovieNames) // This will be available to the entire cluster.
 
   // Read in each rating line
   val lines = sc.textFile("../ml-100k/u.data")
@@ -51,7 +51,7 @@ object PopularMovieNicer extends App {
   val sortedMovies = movieCounts.sortBy(_._2)
 
   // Fold in the movie names from the broadcast variable
-  val sortedMoviesWithNames = sortedMovies.map( x  => (nameDict.value(x._1), x._2) )
+  val sortedMoviesWithNames = sortedMovies.map( x  => (nameDict.value(x._1), x._2) ) // Using broadcast variable
 
   // Collect and print results
   val results = sortedMoviesWithNames.collect()
