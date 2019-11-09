@@ -22,4 +22,4 @@ out
 # Files after merge
 *.orig
 
-
+*.DS_Store
